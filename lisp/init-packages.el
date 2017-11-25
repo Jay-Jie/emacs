@@ -15,6 +15,7 @@
 		nodejs-repl ;; 运行js文件
 		exec-path-from-shell ;; emacs运行命令行程序
 		popwin ;; 光标移动至新buffer
+		reveal-in-osx-finder ;; 通过finder打开当前buffer文件
 		) "Default packages")
 
  (setq package-selected-packages my/packages)

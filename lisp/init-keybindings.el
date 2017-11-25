@@ -15,5 +15,12 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 ;; 查找版本控制文件
 (global-set-key (kbd "C-c p f") 'counsel-git)
+;; 全局缩进
+(global-set-key (kbd "C-M-\\") 'indent-region-or-buffer)
+;; 补全(弥补company)
+(global-set-key (kbd "s-/") 'hippie-expand)
+;; 避免创建新的buffer
+(with-eval-after-load 'dired
+    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
 
 (provide 'init-keybindings)
