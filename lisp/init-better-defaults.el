@@ -11,8 +11,16 @@
 ;; 配置打开最近文件
 (recentf-mode 1)
 (setq recentf-max-menu-item 25)
+;; 定义当光标在括号中间时也高亮显示匹配括号
+(define-advice show-paren-function (:around (fn) fix-show-paren-function)
+  "Highlight enclosing parens."
+  (cond ((looking-at-p "\\s(") (funcall fn))
+	(t (save-excursion
+	     (ignore-errors (backward-up-list))
+	     (funcall fn)))))
 ;; 为emacs-lisp添加显示括号匹配钩子
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+
 ;; 全局缩写
 (abbrev-mode t)
 (define-abbrev-table 'global-abbrev-table '(
@@ -59,5 +67,43 @@
 (require 'dired-x)
 ;; 当使用"S+c"时.默认从一个窗口复制到另外一个窗口.
 (setq dired-dwim-target t)
+;; 删除DOS下的换行符
+(defun remove-dos-eol ()
+  "Replace DOS eolns CR LF with Unix eolns CR"
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\r" nil t) (replace-match "")))
+;; 增强occur-mode搜索功能
+(defun occur-dwim ()
+  "Call `occur' with a sane default."
+  (interactive)
+  (push (if (region-active-p)
+	    (buffer-substring-no-properties
+	     (region-beginning)
+	     (region-end))
+	  (let ((sym (thing-at-point 'symbol)))
+	    (when (stringp sym)
+	      (regexp-quote sym))))
+	regexp-history)
+  (call-interactively 'occur))
+(global-set-key (kbd "M-s o") 'occur-dwim)
+;; 设置默认编码
+(set-language-environment "UTF-8")
+;; 获取chrome打开的当前页面
+(defun wxzove/retrieve-chrome-current-tab-url()
+  "Get the URL of the active tab of the first window"
+  (interactive)
+  (let ((result (do-applescript
+		 (concat
+		  "set frontmostApplication to path to frontmost application\n"
+		  "tell application \"Google Chrome\"\n"
+		  " set theUrl to get URL of active tab of first window\n"
+		  " set theResult to (get theUrl) \n"
+		  "end tell\n"
+		  "activate application (frontmostApplication as text)\n"
+		  "set links to {}\n"
+		  "copy theResult to the end of links\n"
+		  "return links as string\n"))))
+    (format "%s" (s-chop-suffix "\"" (s-chop-prefix "\"" result)))))
 
 (provide 'init-better-defaults)
