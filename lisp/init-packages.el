@@ -22,6 +22,10 @@
 		      iedit ;; 同时修改
 		      org-pomodoro ;;番茄工作法
 		      helm-ag ;; 命令行快速搜索工具
+		      flycheck ;; 代码检查
+		      php-mode ;; PHP
+		      window-numbering ;; 快速切换窗口
+		      which-key ;; 快捷键提示
 		      ) "Default packages")
 
 (setq package-selected-packages my/packages)
@@ -52,7 +56,8 @@
 (setq auto-mode-alist
       (append
        '(("\\.js\\'" . js2-mode)
-	 ("\\.html\\'" . web-mode))
+	 ("\\.html\\'" . web-mode)
+         ("\\.php\\'" . php-mode))
        auto-mode-alist))
 ;; 自动补全
 (global-company-mode t)
@@ -108,5 +113,17 @@
 		(setq imenu-create-index-function 'js2-imenu-make-index)))
 ;; 加载org-pomodoro
 (require 'org-pomodoro)
+;; 开始flycheck检查
+(add-hook 'js2-mode-hook 'flycheck-mode)
+(add-hook 'php-mode-hook 'flycheck-mode)
+;; yasnippet代码补全
+(yas-reload-all)
+(add-hook 'prog-mode-hook #'yas-minor-mode)
+;; 开启快速切换窗口
+(window-numbering-mode t)
+;; 开启快捷键提示
+(which-key-mode t)
+;; 将which-key配置到右边
+(setq which-key-side-window-location 'right)
 
 (provide 'init-packages)

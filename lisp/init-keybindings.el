@@ -40,6 +40,7 @@
   (define-key company-active-map (kbd "C-p") #'company-select-previous))
 ;; ag命令行搜索
 (global-set-key (kbd "C-c p s") 'helm-do-ag-project-root)
-
+;; 添加命令行中向前删除一个单词
+(global-set-key (kbd "C-w") 'backward-kill-word)
 
 (provide 'init-keybindings)
