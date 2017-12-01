@@ -36,6 +36,7 @@
 (depends-on "shut-up")
 (depends-on "smartparens")
 (depends-on "swiper")
+(depends-on "use-package")
 (depends-on "web-mode")
 (depends-on "which-key")
 (depends-on "window-numbering")
